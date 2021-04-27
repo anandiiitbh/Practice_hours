@@ -184,6 +184,10 @@ void MaxSearch(Node *head, int *maxx)
 
 int main()
 {
+    /*                5
+              2          1
+          4      7    8     9
+                  19          10    */
     Node *head = CreateNode(5);
     head->left = CreateNode(2);
     head->right = CreateNode(1);
@@ -245,8 +249,3 @@ int main()
 
     return 0;
 }
-
-//                 5
-//           2          1
-//       4      7    8     9
-//               19          10
