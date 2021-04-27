@@ -134,6 +134,54 @@ int Diameter(Node *head, int *max)
         return 0;
 }
 
+Node *MirrorTree(Node *head)
+{
+    Node *temp = NULL;
+    if (head != NULL)
+    {
+        temp = CreateNode(head->data);
+        temp->right = MirrorTree(head->left);
+        temp->left = MirrorTree(head->right);
+    }
+    return temp;
+}
+
+bool IsBalanced(Node *head)
+{
+    if (head != NULL)
+    {
+        if (IsBalanced(head->right) && IsBalanced(head->left))
+        {
+            return abs(Height(head->left) - Height(head->right)) < 2 ? true : false;
+        }
+        else
+            return false;
+    }
+    return true;
+}
+
+void MinSearch(Node *head, int *minn)
+{
+    if (head != NULL)
+    {
+        if (head->data < *minn)
+            *minn = head->data;
+        MinSearch(head->left, minn);
+        MinSearch(head->right, minn);
+    }
+}
+
+void MaxSearch(Node *head, int *maxx)
+{
+    if (head != NULL)
+    {
+        if (head->data > *maxx)
+            *maxx = head->data;
+        MaxSearch(head->left, maxx);
+        MaxSearch(head->right, maxx);
+    }
+}
+
 int main()
 {
     Node *head = CreateNode(5);
@@ -145,12 +193,12 @@ int main()
     head->right->right = CreateNode(9);
     head->right->right->right = CreateNode(10);
     head->left->right->right = CreateNode(19);
+    head->left->right->right->right = CreateNode(9);
 
     // if (head != NULL)
-    //     cout << head->data;
+    //     cout << head->data;          //Deletion of Node
     // head = Delete(head);
-    // if (head != NULL)
-    //     cout << head->data;
+
     cout << "\nInOrderTraversal :\t";
     InOrderTraversal(head);
     cout << "\nPreOrderTraversal :\t";
@@ -164,10 +212,41 @@ int main()
     int *Dia = new int(0);
     Diameter(head, Dia);
     cout << "\nDiameter of Tree :\t" << *Dia;
+    IsBalanced(head) ? cout << "\nTree is Balanced" : cout << "\nNot Balanced";
+    int *minn = new int(head->data), *maxx = new int(head->data);
+    MinSearch(head, minn);
+    cout << "\nMinimum Number in Tree :\t" << *minn;
+    MaxSearch(head, maxx);
+    cout << "\nmaximum Number in Tree :\t" << *maxx;
+
+    cout << "\n\n After mirroring Tree\n";
+    Node *MirrorHead = MirrorTree(head);
+
+    cout << "\nInOrderTraversal :\t";
+    InOrderTraversal(MirrorHead);
+    cout << "\nPreOrderTraversal :\t";
+    PreOrderTraversal(MirrorHead);
+    cout << "\nPostOrderTraversal :\t";
+    PostOrderTraversal(MirrorHead);
+    LevelOrder(MirrorHead);
+    ReverseLevelOrder(MirrorHead);
+    Search(MirrorHead, 17) ? cout << "\nFound" : cout << "\nNot Found";
+    cout << "\nHeight of Tree is :\t" << Height(MirrorHead);
+    Dia = new int(0);
+    Diameter(MirrorHead, Dia);
+    cout << "\nDiameter of Tree :\t" << *Dia;
+    IsBalanced(MirrorHead) ? cout << "\nTree is Balanced" : cout << "\nNot Balanced";
+    minn = new int(MirrorHead->data);
+    maxx = new int(MirrorHead->data);
+    MinSearch(MirrorHead, minn);
+    cout << "\nMinimum Number in Tree :\t" << *minn;
+    MaxSearch(MirrorHead, maxx);
+    cout << "\nmaximum Number in Tree :\t" << *maxx;
+
     return 0;
 }
 
-//         5
-//     2       1
-// 4      7   8     9
-//         9          10
+//                 5
+//           2          1
+//       4      7    8     9
+//               19          10
