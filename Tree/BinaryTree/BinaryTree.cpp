@@ -146,6 +146,51 @@ Node *MirrorTree(Node *head)
     return temp;
 }
 
+void GetLastNode(Node *head, deque<Node *> &Qt)
+{
+    if (head != NULL)
+    {
+        int i = 0;
+        Node *temp;
+        Qt.push_back(head);
+        while (i < Qt.size())
+        {
+            temp = Qt.at(i);
+            if (temp->right != NULL)
+                Qt.push_back(temp->right);
+            if (temp->left != NULL)
+                Qt.push_back(temp->left);
+            i++;
+        }
+    }
+}
+void Deletion(Node *head, int data)
+{
+    if (head != NULL)
+    {
+        if (head->data == data)
+        {
+            deque<Node *> Qt;
+            GetLastNode(head, Qt);
+            Node *temp = Qt.back();
+            if (head == temp)
+            {
+                head = NULL;
+            }
+            else
+            {
+                head->data = temp->data;
+                temp = NULL;
+            }
+        }
+        else
+        {
+            Deletion(head->left, data);
+            Deletion(head->right, data);
+        }
+    }
+}
+
 bool IsBalanced(Node *head)
 {
     if (head != NULL)
@@ -184,10 +229,12 @@ void MaxSearch(Node *head, int *maxx)
 
 int main()
 {
-    /*                5
+    /*
+                    5
               2          1
           4      7    8     9
-                  19          10    */
+                  19          10   
+ */
     Node *head = CreateNode(5);
     head->left = CreateNode(2);
     head->right = CreateNode(1);
@@ -246,6 +293,14 @@ int main()
     cout << "\nMinimum Number in Tree :\t" << *minn;
     MaxSearch(MirrorHead, maxx);
     cout << "\nmaximum Number in Tree :\t" << *maxx;
+    Deletion(MirrorHead, *maxx);
+    maxx = new int(MirrorHead->data);
+    MaxSearch(MirrorHead, maxx);
+    cout << "\nmaximum Number in Tree :\t" << *maxx;
+    Deletion(MirrorHead, *minn);
+    minn = new int(MirrorHead->data);
+    MinSearch(MirrorHead, minn);
+    cout << "\nminimum Number in Tree :\t" << *minn;
 
     return 0;
 }
